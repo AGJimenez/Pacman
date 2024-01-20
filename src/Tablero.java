@@ -17,10 +17,8 @@ public class Tablero extends JFrame implements KeyListener {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	 private JPanel tablero;
-	    private int jugadorX = 50;
-	    private int jugadorY = 50;
-	    private int diametroJugador = 20;
-	    private Rectangle[] limitesPaneles;
+	  private Personaje jugador;
+	   private Rectangle[] limitesPaneles;
 	/**
 	 * Launch the application.
 	 */
@@ -58,13 +56,11 @@ public class Tablero extends JFrame implements KeyListener {
 		panel.add(marcador);
 		marcador.setLayout(null);
 		
-		 tablero = new JPanel() {
+		  tablero = new JPanel() {
 	            @Override
 	            protected void paintComponent(Graphics g) {
 	                super.paintComponent(g);
-	                // Dibuja el círculo del jugador
-	                g.setColor(Color.RED);
-	                g.fillOval(jugadorX, jugadorY, diametroJugador, diametroJugador);
+	                jugador.dibujar(g); // Usa el método dibujar de la clase Personaje
 	            }
 	        };
 	        tablero.setBackground(Color.DARK_GRAY);
@@ -288,11 +284,13 @@ public class Tablero extends JFrame implements KeyListener {
 	            limitesPaneles[i] = tablero.getComponent(i).getBounds();
 	        }
 	        
+	        jugador = new Personaje(50, 50, 20, Color.RED, limitesPaneles);
+	        
 	     // Establece una posición inicial válida
-	        do {
-	            jugadorX = (int) (Math.random() * (498 - diametroJugador));
-	            jugadorY = (int) (Math.random() * (498 - diametroJugador));
-	        } while (!esPosicionValida(jugadorX, jugadorY));
+	//        do {
+	  //          jugadorX = (int) (Math.random() * (498 - diametroJugador));
+	    //        jugadorY = (int) (Math.random() * (498 - diametroJugador));
+	     //   } while (!esPosicionValida(jugadorX, jugadorY));
 		 
         addKeyListener(this);
         // Hace que el tablero tenga el foco para que pueda recibir eventos de teclado.
@@ -313,12 +311,12 @@ public class Tablero extends JFrame implements KeyListener {
 	
     // Método para verificar si la nueva posición del jugador está dentro de los límites del tablero y sin colisiones con los paneles
     private boolean esPosicionValida(int x, int y) {
-        if (x < 0 || y < 0 || x + diametroJugador > 498 || y + diametroJugador > 498) {
+        if (x < 0 || y < 0 || x + jugador.getDiametro() > 498 || y + jugador.getDiametro() > 498) {
             return false;
         }
 
         // Verifica colisiones con los límites de los paneles
-        Rectangle jugadorRect = new Rectangle(x, y, diametroJugador, diametroJugador);
+        Rectangle jugadorRect = new Rectangle(x, y, jugador.getDiametro(), jugador.getDiametro());
         for (Rectangle limitePanel : limitesPaneles) {
             if (jugadorRect.intersects(limitePanel)) {
                 return false; // Hay colisión con un panel, la posición no es válida
@@ -331,13 +329,13 @@ public class Tablero extends JFrame implements KeyListener {
 
     // Método para mover el jugador y verificar las colisiones.
     private void moverJugador(int deltaX, int deltaY) {
-        int nuevaPosX = jugadorX + deltaX;
-        int nuevaPosY = jugadorY + deltaY;
+        int nuevaPosX = jugador.getX() + deltaX;
+        int nuevaPosY = jugador.getY() + deltaY;
 
         if (esPosicionValida(nuevaPosX, nuevaPosY)) {
-            jugadorX = nuevaPosX;
-            jugadorY = nuevaPosY;
-            tablero.repaint();
+        	 System.out.println("Posición del jugador después de mover: (" + jugador.getX() + ", " + jugador.getY() + ")");
+            jugador.mover(deltaX, deltaY);
+            tablero.repaint();  // Asegúrate de llamar a repaint después de mover al jugador
         }
     }
 

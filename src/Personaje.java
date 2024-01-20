@@ -8,53 +8,34 @@ public class Personaje implements Runnable {
     private int y;
     private int diametro;
     private Color color;
-    private boolean esPacman; // Indica si el personaje es Pacman
-
-    private Tablero tablero;
-
-    public Personaje(int x, int y, int diametro, Color color, boolean esPacman, Tablero tablero) {
+    private Rectangle[] limitesPaneles;
+    private boolean enMovimiento;
+    private int direccionX;
+    
+    public Personaje(int x, int y, int diametro, Color color, Rectangle[] limitesPaneles) {
         this.x = x;
         this.y = y;
         this.diametro = diametro;
         this.color = color;
-        this.esPacman = esPacman;
-        this.tablero = tablero;
-    }
-
-    public void dibujar(Graphics g) {
-        g.setColor(color);
-        if (esPacman) {
-            g.fillArc(x, y, diametro, diametro, 45, 270);
-        } else {
-            g.fillOval(x, y, diametro, diametro);
+        this.limitesPaneles = limitesPaneles;
+        this.enMovimiento = true;
+        this.direccionX = 1;
+        while (colisionConLimites()) {
+            this.x = (int) (Math.random() * (498 - diametro));
+            this.y = (int) (Math.random() * (498 - diametro));
         }
+        Thread hiloMovimiento = new Thread();
+        hiloMovimiento.start();
+    }
+    
+    public void setDireccionX(int direccionX) {
+        this.direccionX = direccionX;
     }
 
-    public Rectangle getBounds() {
-        return new Rectangle(x, y, diametro, diametro);
+    public void detenerMovimiento() {
+        enMovimiento = false;
     }
-
-    @Override
-    public void run() {
-        try {
-            while (true) {
-                mover();
-                Thread.sleep(1000); // Sleep de 1 segundo
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void mover() {
-        if (esPacman) {
-            tablero.moverPacman(this);
-        } else {
-            tablero.moverFantasma(this);
-        }
-    }
-
-    // Métodos adicionales para obtener y establecer la posición del personaje
+    
     public int getX() {
         return x;
     }
@@ -63,11 +44,47 @@ public class Personaje implements Runnable {
         return y;
     }
 
-    public void setX(int x) {
-        this.x = x;
+    public int getDiametro() {
+        return diametro;
     }
 
-    public void setY(int y) {
-        this.y = y;
+    public void mover(int deltaX, int deltaY) {
+        x += deltaX;
+        y += deltaY;
     }
+
+    public void dibujar(Graphics g) {
+    	 System.out.println("Dibujando personaje en: (" + x + ", " + y + ")");
+        g.setColor(color);
+        g.fillOval(x, y, diametro, diametro);
+    }
+
+    public Rectangle getBounds() {
+        return new Rectangle(x, y, diametro, diametro);
+    }
+
+    public boolean colisionConLimites() {
+        for (Rectangle limitePanel : limitesPaneles) {
+            if (getBounds().intersects(limitePanel)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void run() {
+        while (enMovimiento) {
+            mover(direccionX, 0);
+            // Agrega un pequeño retraso para controlar la velocidad del movimiento
+            try {
+                Thread.sleep(50); // Ajusta el valor según la velocidad deseada
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    
 }
+
