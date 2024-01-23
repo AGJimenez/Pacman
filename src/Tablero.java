@@ -19,6 +19,8 @@ public class Tablero extends JFrame implements KeyListener {
 	 private JPanel tablero;
 	  private Personaje jugador;
 	   private Rectangle[] limitesPaneles;
+	   private int direccionX;
+	    private int direccionY;
 	/**
 	 * Launch the application.
 	 */
@@ -284,17 +286,29 @@ public class Tablero extends JFrame implements KeyListener {
 	            limitesPaneles[i] = tablero.getComponent(i).getBounds();
 	        }
 	        
-	        jugador = new Personaje(50, 50, 20, Color.RED, limitesPaneles);
+	        jugador = new Personaje(50, 50, 20, Color.YELLOW, limitesPaneles);
 	        
-	     // Establece una posición inicial válida
-	//        do {
-	  //          jugadorX = (int) (Math.random() * (498 - diametroJugador));
-	    //        jugadorY = (int) (Math.random() * (498 - diametroJugador));
-	     //   } while (!esPosicionValida(jugadorX, jugadorY));
-		 
-        addKeyListener(this);
-        // Hace que el tablero tenga el foco para que pueda recibir eventos de teclado.
-        tablero.requestFocusInWindow();
+	        direccionX = 5;  // Dirección inicial hacia la derecha
+	        direccionY = 0;
+	        
+	        Thread hiloMovimiento = new Thread(() -> {
+	            while (true) {
+	                moverJugador(direccionX, direccionY);
+	                tablero.repaint();
+
+	                try {
+	                    Thread.sleep(100);
+	                } catch (InterruptedException e) {
+	                    e.printStackTrace();
+	                }
+	            }
+	        });
+	        hiloMovimiento.start();
+
+	        addKeyListener(this);
+	        tablero.setFocusable(true);
+	        tablero.requestFocusInWindow();
+	    
 	}
 	
 	
@@ -345,16 +359,20 @@ public class Tablero extends JFrame implements KeyListener {
 
         switch (keyCode) {
             case KeyEvent.VK_UP:
-                moverJugador(0, -10);
+                direccionX = 0;
+                direccionY = -5;
                 break;
             case KeyEvent.VK_DOWN:
-                moverJugador(0, 10);
+                direccionX = 0;
+                direccionY = 5;
                 break;
             case KeyEvent.VK_LEFT:
-                moverJugador(-10, 0);
+                direccionX = -5;
+                direccionY = 0;
                 break;
             case KeyEvent.VK_RIGHT:
-                moverJugador(10, 0);
+                direccionX = 5;
+                direccionY = 0;
                 break;
         }
     }
