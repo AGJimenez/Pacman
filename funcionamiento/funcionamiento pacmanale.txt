@@ -1,0 +1,38 @@
+El juego que se presenta es una implementación básica del clásico Pac-Man en Java utilizando la biblioteca Swing para la interfaz gráfica. A continuación, se explica cómo funciona el juego desde la perspectiva de un programador:
+
+Estructura del Programa:
+
+El programa principal está contenido en la clase Tablero, que extiende de JFrame y actúa como la ventana principal del juego.
+Se utilizan múltiples hilos (Thread) para gestionar el movimiento del jugador (hiloMovimientoPacman) y los fantasmas (hiloFantasmaRojo, hiloFantasmaNaranja, hiloFantasmaRosa, hiloFantasmaAzul).
+Elementos del Juego:
+
+Jugador (Personaje): Representa al personaje principal, el Pac-Man. Se mueve en respuesta a las teclas de flecha.
+Fantasmas (Personaje): Representan a los enemigos del juego. Se mueven de forma autónoma siguiendo una lógica específica.
+Movimiento del Jugador:
+
+El movimiento del jugador se maneja en el hilo hiloMovimientoPacman. Este hilo mueve continuamente al jugador en una dirección específica y verifica las colisiones con los límites del tablero y los paneles dentro de él.
+La clase Personaje se encarga de manejar la lógica de movimiento y dibujo del jugador y los fantasmas.
+Movimiento de los Fantasmas:
+
+Cada fantasma se mueve en su propio hilo (hiloFantasmaRojo, hiloFantasmaNaranja, hiloFantasmaRosa, hiloFantasmaAzul). El movimiento es autónomo y sigue una lógica que evita colisiones con otros fantasmas.
+Se utiliza un generador de números aleatorios para determinar los pasos que dará cada fantasma, y se verifican las colisiones para evitar que choquen entre sí o con los límites del tablero.
+Colisiones:
+
+Las colisiones se verifican continuamente para detectar interacciones entre el jugador y los fantasmas.
+Si hay una colisión entre el jugador y un fantasma, se muestra un mensaje, se resta una vida y se reinicia la posición del jugador y los fantasmas.
+Temporizador y Marcador:
+
+Se utiliza un temporizador (Timer) para limitar la duración del juego. Cuando el temporizador alcanza cero, se termina el juego.
+El marcador muestra el tiempo restante, la cantidad de vidas y otras estadísticas visuales del juego.
+Interfaz Gráfica:
+
+La interfaz gráfica se crea utilizando la biblioteca Swing. Se definen paneles para representar el tablero de juego, el marcador y otros elementos visuales.
+Se utiliza el método paintComponent para dibujar los personajes y otros elementos en el tablero.
+Finalización del Juego:
+
+Cuando se agotan todas las vidas del jugador o el tiempo del temporizador llega a cero, el juego se finaliza.
+Se interrumpen los hilos de movimiento y se muestra un mensaje indicando que el juego ha terminado.
+Reiniciar el Juego:
+
+Se proporciona la funcionalidad para reiniciar el juego después de una colisión. Las vidas se restan y las posiciones se reinician.
+En resumen, este código proporciona una estructura básica para un juego de Pac-Man en Java, con movimientos autónomos para los fantasmas, manejo de colisiones, temporizador y marcador. El juego utiliza múltiples hilos para gestionar simultáneamente las acciones del jugador y los fantasmas, proporcionando una experiencia de juego básica pero funcional.
