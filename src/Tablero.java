@@ -3,7 +3,9 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.JFrame;
@@ -21,6 +23,10 @@ import javax.swing.Timer;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JProgressBar;
+import java.awt.Font;
+import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
+import java.awt.Toolkit;
 
 
 /* 
@@ -44,6 +50,8 @@ public class Tablero extends JFrame implements KeyListener {
 	private Rectangle[] limitesPaneles; //creamos un array de la librería graphics para recorrer los obstáculos en el mapa
 	private int direccionX; //direccion hacia los lados. Predeterminada para el pacman hacia la derecha
 	private int vidas = 3;
+	private int puntos = 0;
+	private JLabel lb_puntos;
 	private JLabel lbl_vida1, lbl_vida2, lbl_vida3;
 	Timer temporizador; //Clase Timer que me crea el temporizador
 	private int direccionY;
@@ -77,77 +85,124 @@ public class Tablero extends JFrame implements KeyListener {
 	 * Create the frame.
 	 */
 	public Tablero() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Tablero.class.getResource("/imagenes/pacman32.png")));
+		setResizable(false);
 		setTitle("Pacman");
 
 		 setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	        setBounds(100, 100, 805, 559);
+	        setBounds(100, 100, 900, 630);
 	        contentPane = new JPanel();
 	        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 	        setContentPane(contentPane);
 	        contentPane.setLayout(null);
-
+	        setLocationRelativeTo(this);
 		
 		 JPanel panel = new JPanel();
 	        panel.setBackground(new Color(31, 31, 31));
-	        panel.setBounds(0, 0, 884, 520);
+	        panel.setBounds(0, 0, 884, 591);
 	        contentPane.add(panel);
 	        panel.setLayout(null);
 		
 		JPanel marcador = new JPanel();
+		marcador.setOpaque(false);
 		marcador.setBackground(new Color(255, 215, 0));
-		marcador.setBounds(573, 11, 202, 498);
+		marcador.setBounds(621, 48, 202, 498);
 		panel.add(marcador);
 		marcador.setLayout(null);
 		
+		lb_puntos = new JLabel("");
+		lb_puntos.setFont(new Font("I pixel u", Font.PLAIN, 22));
+		lb_puntos.setHorizontalAlignment(SwingConstants.CENTER);
+		lb_puntos.setForeground(new Color(255, 255, 255));
+		lb_puntos.setBounds(29, 375, 143, 25);
+		marcador.add(lb_puntos);
+		
+		JLabel lblNewLabel_2_1 = new JLabel("");
+		lblNewLabel_2_1.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/panelVidas.png")));
+		lblNewLabel_2_1.setBounds(10, 364, 182, 48);
+		marcador.add(lblNewLabel_2_1);
+		
+		JLabel lbl_vidas_1 = new JLabel("puntos");
+		lbl_vidas_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lbl_vidas_1.setForeground(Color.WHITE);
+		lbl_vidas_1.setFont(new Font("PacFont", Font.PLAIN, 22));
+		lbl_vidas_1.setBounds(10, 316, 182, 31);
+		marcador.add(lbl_vidas_1);
+		
 		lbl_temporizador = new JLabel("New label");
-		lbl_temporizador.setBounds(70, 46, 60, 14);
+		lbl_temporizador.setFont(new Font("I pixel u", Font.PLAIN, 20));
+		lbl_temporizador.setBounds(51, 162, 109, 31);
 		marcador.add(lbl_temporizador);
 		lbl_temporizador.setText(String.valueOf(tiempoRestante));
 		
-		JLabel lblNewLabel = new JLabel("TIEMPO:");
-		lblNewLabel.setBounds(10, 21, 100, 14);
+		JLabel lblNewLabel = new JLabel("tiempo");
+		lblNewLabel.setForeground(new Color(255, 255, 255));
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setFont(new Font("PacFont", Font.PLAIN, 22));
+		lblNewLabel.setBounds(41, 110, 119, 48);
 		marcador.add(lblNewLabel);
 		
 		tiempoRestante = tiempo_inicial;
 		
 		progressBar = new JProgressBar();
+		progressBar.setBackground(new Color(43, 29, 23));
 		progressBar.setString("");
 		progressBar.setBorderPainted(false);
-		progressBar.setBorder(null);
+		progressBar.setBorder(new LineBorder(new Color(0, 0, 0), 2));
 		progressBar.setStringPainted(true);
-		progressBar.setBounds(10, 42, 182, 25);
+		progressBar.setBounds(10, 165, 182, 25);
 		marcador.add(progressBar);
 		
 		temporizador();
 
 		progressBar.setMaximum(tiempo_inicial); // Pone el valor máximo de la barra de progreso
 		progressBar.setValue(tiempo_inicial);
-		progressBar.setForeground(new Color(255, 128, 0)); 
+		progressBar.setForeground(new Color(252, 209, 37)); 
 		
-		JLabel lbl_vidas = new JLabel("VIDAS:");
-		lbl_vidas.setBounds(10, 91, 46, 14);
+		JLabel lbl_vidas = new JLabel("vidas");
+		lbl_vidas.setForeground(new Color(255, 255, 255));
+		lbl_vidas.setHorizontalAlignment(SwingConstants.CENTER);
+		lbl_vidas.setFont(new Font("PacFont", Font.PLAIN, 22));
+		lbl_vidas.setBounds(10, 209, 182, 31);
 		marcador.add(lbl_vidas);
 		
 		JPanel panel_vidas = new JPanel();
-		panel_vidas.setBackground(Color.DARK_GRAY);
-		panel_vidas.setBounds(10, 116, 182, 48);
+		panel_vidas.setOpaque(false);
+		panel_vidas.setBorder(null);
+		panel_vidas.setBackground(Color.WHITE);
+		panel_vidas.setBounds(10, 251, 182, 48);
 		marcador.add(panel_vidas);
 		panel_vidas.setLayout(null);
 		
 		lbl_vida1 = new JLabel("");
-		lbl_vida1.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/pacman32.png")));
+		lbl_vida1.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/vidas.png")));
 		lbl_vida1.setBounds(20, 9, 32, 32);
 		panel_vidas.add(lbl_vida1);
 		
 		lbl_vida2 = new JLabel("");
-		lbl_vida2.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/pacman32.png")));
+		lbl_vida2.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/vidas.png")));
 		lbl_vida2.setBounds(75, 9, 32, 32);
 		panel_vidas.add(lbl_vida2);
 		
 		lbl_vida3 = new JLabel("");
-		lbl_vida3.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/pacman32.png")));
+		lbl_vida3.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/vidas.png")));
 		lbl_vida3.setBounds(129, 9, 32, 32);
 		panel_vidas.add(lbl_vida3);
+		
+		JLabel lblNewLabel_2 = new JLabel("");
+		lblNewLabel_2.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/panelVidas.png")));
+		lblNewLabel_2.setBounds(0, 0, 182, 48);
+		panel_vidas.add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_1 = new JLabel("");
+		lblNewLabel_1.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/clock.gif")));
+		lblNewLabel_1.setBounds(74, 57, 42, 42);
+		marcador.add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_3 = new JLabel("\r\n");
+		lblNewLabel_3.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/fondopanel.png")));
+		lblNewLabel_3.setBounds(0, 0, 202, 498);
+		marcador.add(lblNewLabel_3);
 		
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -168,8 +223,8 @@ public class Tablero extends JFrame implements KeyListener {
 	                semaforoColision = new Semaphore(1); 
 	            }
 	        };
-	        tablero.setBackground(Color.DARK_GRAY);
-	        tablero.setBounds(10, 11, 498, 498);
+	        tablero.setBackground(new Color(39, 39, 39));
+	        tablero.setBounds(58, 48, 498, 498);
 	        panel.add(tablero);
 	        tablero.setLayout(null);
 	        tablero.setFocusable(true);
@@ -178,218 +233,272 @@ public class Tablero extends JFrame implements KeyListener {
 		//Muchos paneles para crear el laberinto, esto después se recorrerá
 	        
 		JPanel panel_3_1_1_4 = new JPanel();
+		panel_3_1_1_4.setBackground(new Color(0, 128, 255));
 		panel_3_1_1_4.setBounds(0, 395, 45, 16);
 		tablero.add(panel_3_1_1_4);
 		
 		JPanel panel_3_1_1_4_1 = new JPanel();
+		panel_3_1_1_4_1.setBackground(new Color(0, 128, 255));
 		panel_3_1_1_4_1.setBounds(453, 395, 45, 16);
 		tablero.add(panel_3_1_1_4_1);
 		
 		JPanel panel_6_2_1_1_1 = new JPanel();
+		panel_6_2_1_1_1.setBackground(new Color(0, 128, 255));
 		panel_6_2_1_1_1.setBounds(348, 250, 17, 63);
 		tablero.add(panel_6_2_1_1_1);
 		
 		JPanel panel_6_2_1_1_2 = new JPanel();
+		panel_6_2_1_1_2.setBackground(new Color(0, 128, 255));
 		panel_6_2_1_1_2.setBounds(241, 300, 17, 63);
 		tablero.add(panel_6_2_1_1_2);
 		
 		JPanel panel_6_2_1_1 = new JPanel();
+		panel_6_2_1_1.setBackground(new Color(0, 128, 255));
 		panel_6_2_1_1.setBounds(134, 250, 17, 63);
 		tablero.add(panel_6_2_1_1);
 		
 		JPanel panel_6_1 = new JPanel();
+		panel_6_1.setBackground(new Color(0, 128, 255));
 		panel_6_1.setBounds(348, 395, 17, 51);
 		tablero.add(panel_6_1);
 		
 		JPanel panel_6_2_1 = new JPanel();
+		panel_6_2_1.setBackground(new Color(0, 128, 255));
 		panel_6_2_1.setBounds(81, 347, 17, 64);
 		tablero.add(panel_6_2_1);
 		
 		JPanel panel_6_2 = new JPanel();
+		panel_6_2.setBackground(new Color(0, 128, 255));
 		panel_6_2.setBounds(400, 347, 17, 64);
 		tablero.add(panel_6_2);
 		
 		JPanel panel_6 = new JPanel();
+		panel_6.setBackground(new Color(0, 128, 255));
 		panel_6.setBounds(134, 395, 17, 51);
 		tablero.add(panel_6);
 		
 		JPanel panel_3_1_1_1_4 = new JPanel();
+		panel_3_1_1_1_4.setBackground(new Color(0, 128, 255));
 		panel_3_1_1_1_4.setBounds(188, 297, 122, 16);
 		tablero.add(panel_3_1_1_1_4);
 		
         JPanel panel_1 = new JPanel();
+        panel_1.setBackground(new Color(0, 128, 255));
         panel_1.setBounds(189, 260, 121, 10);
         tablero.add(panel_1);
         
         JPanel panel_2 = new JPanel();
+        panel_2.setBackground(new Color(0, 128, 255));
         panel_2.setBounds(300, 219, 10, 51);
         tablero.add(panel_2);
         
         JPanel panel_2_1 = new JPanel();
+        panel_2_1.setBackground(new Color(0, 128, 255));
         panel_2_1.setBounds(188, 219, 10, 51);
         tablero.add(panel_2_1);
         
         JPanel panel_1_1 = new JPanel();
+        panel_1_1.setBackground(new Color(0, 128, 255));
         panel_1_1.setBounds(188, 209, 39, 10);
         tablero.add(panel_1_1);
         
         JPanel panel_1_1_1 = new JPanel();
+        panel_1_1_1.setBackground(new Color(0, 128, 255));
         panel_1_1_1.setBounds(271, 209, 39, 10);
         tablero.add(panel_1_1_1);
 		
 		JPanel panel_3_1_1_1_2 = new JPanel();
+		panel_3_1_1_1_2.setBackground(new Color(0, 128, 255));
 		panel_3_1_1_1_2.setBounds(44, 347, 54, 16);
 		tablero.add(panel_3_1_1_1_2);
 		
 		JPanel panel_3_1_1_3 = new JPanel();
+		panel_3_1_1_3.setBackground(new Color(0, 128, 255));
 		panel_3_1_1_3.setBounds(145, 154, 54, 16);
 		tablero.add(panel_3_1_1_3);
 		
 		JPanel panel_3_1_1_1_1 = new JPanel();
+		panel_3_1_1_1_1.setBackground(new Color(0, 128, 255));
 		panel_3_1_1_1_1.setBounds(294, 154, 54, 16);
 		tablero.add(panel_3_1_1_1_1);
 		
 		JPanel panel_3_1_1_1_3 = new JPanel();
+		panel_3_1_1_1_3.setBackground(new Color(0, 128, 255));
 		panel_3_1_1_1_3.setBounds(400, 347, 54, 16);
 		tablero.add(panel_3_1_1_1_3);
 		
 		JPanel panel_5_1_2_1 = new JPanel();
+		panel_5_1_2_1.setBackground(new Color(0, 128, 255));
 		panel_5_1_2_1.setBounds(348, 105, 17, 114);
 		tablero.add(panel_5_1_2_1);
 		
 		JPanel panel_5_1_2 = new JPanel();
+		panel_5_1_2.setBackground(new Color(0, 128, 255));
 		panel_5_1_2.setBounds(134, 105, 17, 114);
 		tablero.add(panel_5_1_2);
 		
 		JPanel panel_5_1_1 = new JPanel();
+		panel_5_1_1.setBackground(new Color(0, 128, 255));
 		panel_5_1_1.setBounds(241, 105, 17, 65);
 		tablero.add(panel_5_1_1);
 		
 		JPanel panel_5_1 = new JPanel();
+		panel_5_1.setBackground(new Color(0, 128, 255));
 		panel_5_1.setBounds(241, 395, 17, 65);
 		tablero.add(panel_5_1);
 		
 		JPanel panel_3_1_1_2_2_2 = new JPanel();
+		panel_3_1_1_2_2_2.setBackground(new Color(0, 128, 255));
 		panel_3_1_1_2_2_2.setBounds(187, 395, 123, 16);
 		tablero.add(panel_3_1_1_2_2_2);
 		
 		JPanel panel_3_1_1_2_2_1_1 = new JPanel();
+		panel_3_1_1_2_2_1_1.setBackground(new Color(0, 128, 255));
 		panel_3_1_1_2_2_1_1.setBounds(294, 444, 160, 16);
 		tablero.add(panel_3_1_1_2_2_1_1);
 		
 		JPanel panel_3_1_1_2_2_1 = new JPanel();
+		panel_3_1_1_2_2_1.setBackground(new Color(0, 128, 255));
 		panel_3_1_1_2_2_1.setBounds(44, 444, 160, 16);
 		tablero.add(panel_3_1_1_2_2_1);
 		
 		JPanel panel_3_1_1_2_2 = new JPanel();
+		panel_3_1_1_2_2.setBackground(new Color(0, 128, 255));
 		panel_3_1_1_2_2.setBounds(187, 105, 123, 16);
 		tablero.add(panel_3_1_1_2_2);
 		
 		JPanel panel_3_1_1_2_1 = new JPanel();
+		panel_3_1_1_2_1.setBackground(new Color(0, 128, 255));
 		panel_3_1_1_2_1.setBounds(294, 347, 71, 16);
 		tablero.add(panel_3_1_1_2_1);
 		
 		JPanel panel_3_1_1_2 = new JPanel();
+		panel_3_1_1_2.setBackground(new Color(0, 128, 255));
 		panel_3_1_1_2.setBounds(133, 347, 71, 16);
 		tablero.add(panel_3_1_1_2);
 		
 		JPanel panel_3_1_1_1 = new JPanel();
+		panel_3_1_1_1.setBackground(new Color(0, 128, 255));
 		panel_3_1_1_1.setBounds(400, 105, 54, 16);
 		tablero.add(panel_3_1_1_1);
 		
 		JPanel panel_3_1_1 = new JPanel();
+		panel_3_1_1.setBackground(new Color(0, 128, 255));
 		panel_3_1_1.setBounds(44, 105, 54, 16);
 		tablero.add(panel_3_1_1);
 		
 		JPanel panel_5 = new JPanel();
+		panel_5.setBackground(new Color(0, 128, 255));
 		panel_5.setBounds(241, 0, 17, 73);
 		tablero.add(panel_5);
 		
 		JPanel panel_4_1_1_1 = new JPanel();
+		panel_4_1_1_1.setBackground(new Color(0, 128, 255));
 		panel_4_1_1_1.setBounds(133, 40, 71, 33);
 		tablero.add(panel_4_1_1_1);
 		
 		JPanel panel_4_1_1 = new JPanel();
+		panel_4_1_1.setBackground(new Color(0, 128, 255));
 		panel_4_1_1.setBounds(294, 40, 71, 33);
 		tablero.add(panel_4_1_1);
 		
 		JPanel panel_4_1 = new JPanel();
+		panel_4_1.setBackground(new Color(0, 128, 255));
 		panel_4_1.setBounds(400, 40, 54, 33);
 		tablero.add(panel_4_1);
 		
 		JPanel panel_4 = new JPanel();
+		panel_4.setBackground(new Color(0, 128, 255));
 		panel_4.setBounds(44, 40, 54, 33);
 		tablero.add(panel_4);
 		
 		JPanel panel_3_3 = new JPanel();
+		panel_3_3.setBackground(new Color(0, 128, 255));
 		panel_3_3.setBounds(400, 250, 10, 66);
 		tablero.add(panel_3_3);
 		
 		JPanel panel_3_2 = new JPanel();
+		panel_3_2.setBackground(new Color(0, 128, 255));
 		panel_3_2.setBounds(88, 250, 10, 66);
 		tablero.add(panel_3_2);
 		
 		JPanel panel_3_1 = new JPanel();
+		panel_3_1.setBackground(new Color(0, 128, 255));
 		panel_3_1.setBounds(88, 152, 10, 67);
 		tablero.add(panel_3_1);
 		
 		JPanel panel_3 = new JPanel();
+		panel_3.setBackground(new Color(0, 128, 255));
 		panel_3.setBounds(400, 152, 10, 67);
 		tablero.add(panel_3);
 		
 		JPanel parte_super_1_1_1_3 = new JPanel();
+		parte_super_1_1_1_3.setBackground(new Color(0, 128, 255));
 		parte_super_1_1_1_3.setBounds(0, 306, 98, 10);
 		tablero.add(parte_super_1_1_1_3);
 		
 		JPanel parte_super_1_1_1_2 = new JPanel();
+		parte_super_1_1_1_2.setBackground(new Color(0, 128, 255));
 		parte_super_1_1_1_2.setBounds(400, 306, 98, 10);
 		tablero.add(parte_super_1_1_1_2);
 		
 		JPanel parte_super_1_1_1 = new JPanel();
+		parte_super_1_1_1.setBackground(new Color(0, 128, 255));
 		parte_super_1_1_1.setBounds(0, 250, 98, 10);
 		tablero.add(parte_super_1_1_1);
 		
 		JPanel parte_super_1_1_1_1 = new JPanel();
+		parte_super_1_1_1_1.setBackground(new Color(0, 128, 255));
 		parte_super_1_1_1_1.setBounds(400, 250, 98, 10);
 		tablero.add(parte_super_1_1_1_1);
 		
 		JPanel parte_super_1_1 = new JPanel();
+		parte_super_1_1.setBackground(new Color(0, 128, 255));
 		parte_super_1_1.setBounds(0, 209, 98, 10);
 		tablero.add(parte_super_1_1);
 		
 		JPanel parte_super_1_2 = new JPanel();
+		parte_super_1_2.setBackground(new Color(0, 128, 255));
 		parte_super_1_2.setBounds(0, 152, 98, 10);
 		tablero.add(parte_super_1_2);
 		
 		JPanel parte_super_1 = new JPanel();
+		parte_super_1.setBackground(new Color(0, 128, 255));
 		parte_super_1.setBounds(400, 209, 98, 10);
 		tablero.add(parte_super_1);
 		
 		JPanel parte_super = new JPanel();
+		parte_super.setBackground(new Color(0, 128, 255));
 		parte_super.setBounds(400, 152, 98, 10);
 		tablero.add(parte_super);
 		
 		JPanel parte_inferior_der_1 = new JPanel();
+		parte_inferior_der_1.setBackground(new Color(0, 128, 255));
 		parte_inferior_der_1.setBounds(488, 306, 10, 192);
 		tablero.add(parte_inferior_der_1);
 		
 		JPanel parte_inferior_izq = new JPanel();
+		parte_inferior_izq.setBackground(new Color(0, 128, 255));
 		parte_inferior_izq.setBounds(0, 306, 10, 192);
 		tablero.add(parte_inferior_izq);
 		
 		JPanel parte_inferior = new JPanel();
+		parte_inferior.setBackground(new Color(0, 128, 255));
 		parte_inferior.setBounds(0, 488, 498, 10);
 		tablero.add(parte_inferior);
 		
 		JPanel parte_superior_izquierda = new JPanel();
+		parte_superior_izquierda.setBackground(new Color(0, 128, 255));
 		parte_superior_izquierda.setBounds(0, 0, 10, 161);
 		tablero.add(parte_superior_izquierda);
 		
 		JPanel parte_superior_derecha = new JPanel();
+		parte_superior_derecha.setBackground(new Color(0, 128, 255));
 		parte_superior_derecha.setBounds(488, 0, 10, 161);
 		tablero.add(parte_superior_derecha);
 		
 		JPanel parte_superior_exterior = new JPanel();
+		parte_superior_exterior.setBackground(new Color(0, 128, 255));
 		parte_superior_exterior.setBounds(0, 0, 498, 10);
 		tablero.add(parte_superior_exterior);
 		
@@ -449,14 +558,14 @@ public class Tablero extends JFrame implements KeyListener {
 	        lblNewLabel_111 = new JLabel("");
 	        lblNewLabel_111.setOpaque(true);
 	        lblNewLabel_111.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
-	        lblNewLabel_111.setBounds(215, 465, 12, 12);
+	        lblNewLabel_111.setBounds(161, 465, 12, 12);
 	        tablero.add(lblNewLabel_111);
 	        
 	        JLabel lblNewLabel_1111;
 	        lblNewLabel_1111 = new JLabel("");
 	        lblNewLabel_1111.setOpaque(true);
 	        lblNewLabel_1111.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
-	        lblNewLabel_1111.setBounds(271, 465, 12, 12);
+	        lblNewLabel_1111.setBounds(326, 471, 12, 12);
 	        tablero.add(lblNewLabel_1111);
 	        
 	        JLabel lblNewLabel_12;
@@ -505,14 +614,14 @@ public class Tablero extends JFrame implements KeyListener {
 	        lblNewLabel_18 = new JLabel("");
 	        lblNewLabel_18.setOpaque(true);
 	        lblNewLabel_18.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
-	        lblNewLabel_18.setBounds(215, 422, 12, 12);
+	        lblNewLabel_18.setBounds(161, 421, 12, 12);
 	        tablero.add(lblNewLabel_18);
 	        
 	        JLabel lblNewLabel_19;
 	        lblNewLabel_19 = new JLabel("");
 	        lblNewLabel_19.setOpaque(true);
 	        lblNewLabel_19.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
-	        lblNewLabel_19.setBounds(271, 422, 12, 12);
+	        lblNewLabel_19.setBounds(300, 374, 12, 12);
 	        tablero.add(lblNewLabel_19);
 	        
 	        JLabel lblNewLabel_10;
@@ -547,7 +656,7 @@ public class Tablero extends JFrame implements KeyListener {
 	        lblNewLabel_144 = new JLabel("");
 	        lblNewLabel_144.setOpaque(true);
 	        lblNewLabel_144.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
-	        lblNewLabel_144.setBounds(426, 421, 12, 12);
+	        lblNewLabel_144.setBounds(466, 465, 12, 12);
 	        tablero.add(lblNewLabel_144);
 	        
 	        JLabel lblNewLabel_155;
@@ -624,7 +733,7 @@ public class Tablero extends JFrame implements KeyListener {
 	        lblNewLabel_05 = new JLabel("");
 	        lblNewLabel_05.setOpaque(true);
 	        lblNewLabel_05.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
-	        lblNewLabel_05.setBounds(326, 301, 12, 12);
+	        lblNewLabel_05.setBounds(166, 374, 12, 12);
 	        tablero.add(lblNewLabel_05);
 	        
 	        JLabel lblNewLabel_06;
@@ -704,6 +813,16 @@ public class Tablero extends JFrame implements KeyListener {
 	        lblNewLabel_081.setBounds(10, 230, 12, 12);
 	        tablero.add(lblNewLabel_081);
 	        
+	        JLabel lblNewLabel_5 = new JLabel("");
+	        lblNewLabel_5.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/trasparencia2.png")));
+	        lblNewLabel_5.setBounds(0, 0, 884, 591);
+	        panel.add(lblNewLabel_5);
+	        
+	        JLabel lblNewLabel_4 = new JLabel("");
+	        lblNewLabel_4.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/fondo.gif")));
+	        lblNewLabel_4.setBounds(0, 0, 884, 619);
+	        panel.add(lblNewLabel_4);
+	        
 
 	        tablero.requestFocusInWindow();
 	    
@@ -776,7 +895,7 @@ public class Tablero extends JFrame implements KeyListener {
     }
 
 
-    
+    private Set<JLabel> labelsConsumidos = new HashSet<>();
     private void verificarColisiones() {
         Rectangle jugadorRect = new Rectangle(jugador.getX(), jugador.getY(), jugador.getDiametro(), jugador.getDiametro());
 
@@ -796,15 +915,19 @@ public class Tablero extends JFrame implements KeyListener {
         for (Component componente : componentes) {
             if (componente instanceof JLabel) {
                 JLabel label = (JLabel) componente;
-                Rectangle labelRect = label.getBounds();
-                if (jugadorRect.intersects(labelRect)) {
-                    // Colisión con un JLabel, oculta la etiqueta
-                    label.setVisible(false);
+                if (!labelsConsumidos.contains(label)) {
+                    Rectangle labelRect = label.getBounds();
+                    if (jugadorRect.intersects(labelRect)) {
+                        // Colisión con un JLabel, oculta la etiqueta
+                        label.setVisible(false);
+                        labelsConsumidos.add(label);
+                        puntos = puntos + 10;
+                        lb_puntos.setText(Integer.toString(puntos));
+                    }
                 }
             }
         }
     }
-
     
     private void restarVida() {
         vidas--;
