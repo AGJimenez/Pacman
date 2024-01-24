@@ -404,13 +404,15 @@ public class Tablero extends JFrame implements KeyListener {
 	            limitesPaneles[i] = tablero.getComponent(i).getBounds();
 	        }
 	        //Inicializo los fantasmas
-	        fantasmaRosa = new Personaje(208, 232, 20, Color.PINK, limitesPaneles);
-	        fantasmaAzul = new Personaje(238, 232, 20, Color.CYAN, limitesPaneles);
-	        fantasmaNaranja = new Personaje(269, 232, 20, Color.ORANGE, limitesPaneles);
-	        fantasmaRojo = new Personaje(238, 207, 20, Color.RED, limitesPaneles);
+	        fantasmaRosa = new Personaje(208, 232, 25, "/imagenes/pink.png", limitesPaneles);
+	        fantasmaAzul = new Personaje(238, 232, 25, "/imagenes/blue.png", limitesPaneles);
+	        fantasmaNaranja = new Personaje(269, 232, 25, "/imagenes/orange.png", limitesPaneles);
+	        fantasmaRojo = new Personaje(238, 207, 25, "/imagenes/red.png", limitesPaneles);
+	        
+	        
 	        
 	        //Inicializo el jugador
-	        jugador = new Personaje(238, 272, 20, Color.YELLOW, limitesPaneles);
+	        jugador = new Personaje(238, 272, 25, "/imagenes/pacmangif.gif", limitesPaneles);
 	        
 	        direccionX = 5;  // Dirección inicial hacia la derecha
 	        direccionY = 0;
