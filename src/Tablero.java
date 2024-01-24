@@ -10,6 +10,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
+import java.awt.Component;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
@@ -57,6 +59,7 @@ public class Tablero extends JFrame implements KeyListener {
 	private Thread hiloFantasmaRosa;
 	private Thread hiloMovimientoPacman;
 	private boolean pausaTemporal = false;
+
 	/**
 	 * Launch the application.
 	 */
@@ -74,6 +77,7 @@ public class Tablero extends JFrame implements KeyListener {
 	 * Create the frame.
 	 */
 	public Tablero() {
+		setTitle("Pacman");
 
 		 setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	        setBounds(100, 100, 805, 559);
@@ -317,14 +321,6 @@ public class Tablero extends JFrame implements KeyListener {
 		panel_4.setBounds(44, 40, 54, 33);
 		tablero.add(panel_4);
 		
-		JPanel panel_3_4_1 = new JPanel();
-		panel_3_4_1.setBounds(0, 209, 10, 51);
-		tablero.add(panel_3_4_1);
-		
-		JPanel panel_3_4 = new JPanel();
-		panel_3_4.setBounds(488, 209, 10, 51);
-		tablero.add(panel_3_4);
-		
 		JPanel panel_3_3 = new JPanel();
 		panel_3_3.setBounds(400, 250, 10, 66);
 		tablero.add(panel_3_3);
@@ -408,8 +404,8 @@ public class Tablero extends JFrame implements KeyListener {
 	        fantasmaAzul = new Personaje(238, 232, 25, "/imagenes/blue.png", limitesPaneles, true);
 	        fantasmaNaranja = new Personaje(269, 232, 25, "/imagenes/orange.png", limitesPaneles, true);
 	        fantasmaRojo = new Personaje(238, 207, 25, "/imagenes/red.png", limitesPaneles, true);
-	        
-	        
+
+	    //    tablero.setComponentZOrder(fantasmaRosa, 1);
 	        
 	        //Inicializo el jugador
 	        jugador = new Personaje(238, 272, 25, "/imagenes/pacmangif.gif", limitesPaneles, true);
@@ -447,6 +443,266 @@ public class Tablero extends JFrame implements KeyListener {
 	        
 	        addKeyListener(this);
 	        tablero.setFocusable(true);
+	        
+	        
+	        JLabel lblNewLabel_111;
+	        lblNewLabel_111 = new JLabel("");
+	        lblNewLabel_111.setOpaque(true);
+	        lblNewLabel_111.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_111.setBounds(215, 465, 12, 12);
+	        tablero.add(lblNewLabel_111);
+	        
+	        JLabel lblNewLabel_1111;
+	        lblNewLabel_1111 = new JLabel("");
+	        lblNewLabel_1111.setOpaque(true);
+	        lblNewLabel_1111.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_1111.setBounds(271, 465, 12, 12);
+	        tablero.add(lblNewLabel_1111);
+	        
+	        JLabel lblNewLabel_12;
+	        lblNewLabel_12 = new JLabel("");
+	        lblNewLabel_12.setOpaque(true);
+	        lblNewLabel_12.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_12.setBounds(106, 230, 12, 12);
+	        tablero.add(lblNewLabel_12);
+	        
+	        JLabel lblNewLabel_13;
+	        lblNewLabel_13 = new JLabel("");
+	        lblNewLabel_13.setOpaque(true);
+	        lblNewLabel_13.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_13.setBounds(373, 230, 12, 12);
+	        tablero.add(lblNewLabel_13);
+	        
+	        JLabel lblNewLabel_14;
+	        lblNewLabel_14 = new JLabel("");
+	        lblNewLabel_14.setOpaque(true);
+	        lblNewLabel_14.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_14.setBounds(106, 326, 12, 12);
+	        tablero.add(lblNewLabel_14);
+	        
+	        JLabel lblNewLabel_15;
+	        lblNewLabel_15 = new JLabel("");
+	        lblNewLabel_15.setOpaque(true);
+	        lblNewLabel_15.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_15.setBounds(373, 326, 12, 12);
+	        tablero.add(lblNewLabel_15);
+	        
+	        JLabel lblNewLabel_16;
+	        lblNewLabel_16 = new JLabel("");
+	        lblNewLabel_16.setOpaque(true);
+	        lblNewLabel_16.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_16.setBounds(373, 85, 12, 12);
+	        tablero.add(lblNewLabel_16);
+	        
+	        JLabel lblNewLabel_17;
+	        lblNewLabel_17 = new JLabel("");
+	        lblNewLabel_17.setOpaque(true);
+	        lblNewLabel_17.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_17.setBounds(106, 85, 12, 12);
+	        tablero.add(lblNewLabel_17);
+	        
+	        JLabel lblNewLabel_18;
+	        lblNewLabel_18 = new JLabel("");
+	        lblNewLabel_18.setOpaque(true);
+	        lblNewLabel_18.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_18.setBounds(215, 422, 12, 12);
+	        tablero.add(lblNewLabel_18);
+	        
+	        JLabel lblNewLabel_19;
+	        lblNewLabel_19 = new JLabel("");
+	        lblNewLabel_19.setOpaque(true);
+	        lblNewLabel_19.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_19.setBounds(271, 422, 12, 12);
+	        tablero.add(lblNewLabel_19);
+	        
+	        JLabel lblNewLabel_10;
+	        lblNewLabel_10 = new JLabel("");
+	        lblNewLabel_10.setOpaque(true);
+	        lblNewLabel_10.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_10.setBounds(54, 374, 12, 12);
+	        tablero.add(lblNewLabel_10);
+	        
+	        JLabel lblNewLabel_122;
+	        lblNewLabel_122 = new JLabel("");
+	        lblNewLabel_122.setOpaque(true);
+	        lblNewLabel_122.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_122.setBounds(106, 421, 12, 12);
+	        tablero.add(lblNewLabel_122);
+	        
+	        JLabel lblNewLabel_123;
+	        lblNewLabel_123 = new JLabel("");
+	        lblNewLabel_123.setOpaque(true);
+	        lblNewLabel_123.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_123.setBounds(326, 422, 12, 12);
+	        tablero.add(lblNewLabel_123);
+	        
+	        JLabel lblNewLabel_124;
+	        lblNewLabel_124 = new JLabel("");
+	        lblNewLabel_124.setOpaque(true);
+	        lblNewLabel_124.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_124.setBounds(375, 421, 12, 12);
+	        tablero.add(lblNewLabel_124);
+	        
+	        JLabel lblNewLabel_144;
+	        lblNewLabel_144 = new JLabel("");
+	        lblNewLabel_144.setOpaque(true);
+	        lblNewLabel_144.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_144.setBounds(426, 421, 12, 12);
+	        tablero.add(lblNewLabel_144);
+	        
+	        JLabel lblNewLabel_155;
+	        lblNewLabel_155 = new JLabel("");
+	        lblNewLabel_155.setOpaque(true);
+	        lblNewLabel_155.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_155.setBounds(466, 327, 12, 12);
+	        tablero.add(lblNewLabel_155);
+	        
+	        JLabel lblNewLabel_166;
+	        lblNewLabel_166 = new JLabel("");
+	        lblNewLabel_166.setOpaque(true);
+	        lblNewLabel_166.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_166.setBounds(20, 21, 12, 12);
+	        tablero.add(lblNewLabel_166);
+	        
+	        JLabel lblNewLabel_188;
+	        lblNewLabel_188 = new JLabel("");
+	        lblNewLabel_188.setOpaque(true);
+	        lblNewLabel_188.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_188.setBounds(20, 129, 12, 12);
+	        tablero.add(lblNewLabel_188);
+	        
+	        JLabel lblNewLabel_199;
+	        lblNewLabel_199 = new JLabel("");
+	        lblNewLabel_199.setOpaque(true);
+	        lblNewLabel_199.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_199.setBounds(215, 21, 12, 12);
+	        tablero.add(lblNewLabel_199);
+	        
+	        JLabel lblNewLabel_1212;
+	        lblNewLabel_1212 = new JLabel("");
+	        lblNewLabel_1212.setOpaque(true);
+	        lblNewLabel_1212.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_1212.setBounds(271, 21, 12, 12);
+	        tablero.add(lblNewLabel_1212);
+	        
+	        JLabel lblNewLabel_1123;
+	        lblNewLabel_1123 = new JLabel("");
+	        lblNewLabel_1123.setOpaque(true);
+	        lblNewLabel_1123.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_1123.setBounds(466, 21, 12, 12);
+	        tablero.add(lblNewLabel_1123);
+	        
+	        JLabel lblNewLabel_01;
+	        lblNewLabel_01 = new JLabel("");
+	        lblNewLabel_01.setOpaque(true);
+	        lblNewLabel_01.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_01.setBounds(466, 129, 12, 12);
+	        tablero.add(lblNewLabel_01);
+	        
+	        JLabel lblNewLabel_02;
+	        lblNewLabel_02 = new JLabel("");
+	        lblNewLabel_02.setOpaque(true);
+	        lblNewLabel_02.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_02.setBounds(271, 82, 12, 12);
+	        tablero.add(lblNewLabel_02);
+	        
+	        JLabel lblNewLabel_03;
+	        lblNewLabel_03 = new JLabel("");
+	        lblNewLabel_03.setOpaque(true);
+	        lblNewLabel_03.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_03.setBounds(106, 21, 12, 12);
+	        tablero.add(lblNewLabel_03);
+	        
+	        JLabel lblNewLabel_04;
+	        lblNewLabel_04 = new JLabel("");
+	        lblNewLabel_04.setOpaque(true);
+	        lblNewLabel_04.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_04.setBounds(466, 227, 12, 12);
+	        tablero.add(lblNewLabel_04);
+	        
+	        JLabel lblNewLabel_05;
+	        lblNewLabel_05 = new JLabel("");
+	        lblNewLabel_05.setOpaque(true);
+	        lblNewLabel_05.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_05.setBounds(326, 301, 12, 12);
+	        tablero.add(lblNewLabel_05);
+	        
+	        JLabel lblNewLabel_06;
+	        lblNewLabel_06 = new JLabel("");
+	        lblNewLabel_06.setOpaque(true);
+	        lblNewLabel_06.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_06.setBounds(20, 327, 12, 12);
+	        tablero.add(lblNewLabel_06);
+	        
+	        JLabel lblNewLabel_07;
+	        lblNewLabel_07 = new JLabel("");
+	        lblNewLabel_07.setOpaque(true);
+	        lblNewLabel_07.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_07.setBounds(219, 324, 12, 12);
+	        tablero.add(lblNewLabel_07);
+	        
+	        JLabel lblNewLabel_08;
+	        lblNewLabel_08 = new JLabel("");
+	        lblNewLabel_08.setOpaque(true);
+	        lblNewLabel_08.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_08.setBounds(271, 324, 12, 12);
+	        tablero.add(lblNewLabel_08);
+	        
+	        JLabel lblNewLabel_09;
+	        lblNewLabel_09 = new JLabel("");
+	        lblNewLabel_09.setOpaque(true);
+	        lblNewLabel_09.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_09.setBounds(166, 186, 12, 12);
+	        tablero.add(lblNewLabel_09);
+	        
+	        JLabel lblNewLabel_012;
+	        lblNewLabel_012 = new JLabel("");
+	        lblNewLabel_012.setOpaque(true);
+	        lblNewLabel_012.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_012.setBounds(326, 186, 12, 12);
+	        tablero.add(lblNewLabel_012);
+	        
+	        JLabel lblNewLabel_0123;
+	        lblNewLabel_0123 = new JLabel("");
+	        lblNewLabel_0123.setOpaque(true);
+	        lblNewLabel_0123.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_0123.setBounds(161, 105, 12, 12);
+	        tablero.add(lblNewLabel_0123);
+	        
+	        JLabel lblNewLabel_0122;
+	        lblNewLabel_0122 = new JLabel("");
+	        lblNewLabel_0122.setOpaque(true);
+	        lblNewLabel_0122.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_0122.setBounds(320, 105, 12, 12);
+	        tablero.add(lblNewLabel_0122);
+	        
+	        JLabel lblNewLabel_009;
+	        lblNewLabel_009 = new JLabel("");
+	        lblNewLabel_009.setOpaque(true);
+	        lblNewLabel_009.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_009.setBounds(161, 301, 12, 12);
+	        tablero.add(lblNewLabel_009);
+	        
+	        JLabel lblNewLabel_0221;
+	        lblNewLabel_0221 = new JLabel("");
+	        lblNewLabel_0221.setOpaque(true);
+	        lblNewLabel_0221.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_0221.setBounds(20, 422, 12, 12);
+	        tablero.add(lblNewLabel_0221);
+	        
+	        JLabel lblNewLabel_0124;
+	        lblNewLabel_0124 = new JLabel("");
+	        lblNewLabel_0124.setOpaque(true);
+	        lblNewLabel_0124.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_0124.setBounds(20, 465, 12, 12);
+	        tablero.add(lblNewLabel_0124);
+	        
+	        JLabel lblNewLabel_081;
+	        lblNewLabel_081 = new JLabel("");
+	        lblNewLabel_081.setOpaque(true);
+	        lblNewLabel_081.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_081.setBounds(10, 230, 12, 12);
+	        tablero.add(lblNewLabel_081);
 	        
 
 	        tablero.requestFocusInWindow();
@@ -503,13 +759,22 @@ public class Tablero extends JFrame implements KeyListener {
         int nuevaPosX = jugador.getX() + deltaX;
         int nuevaPosY = jugador.getY() + deltaY;
 
+        if (nuevaPosX < 0) {
+            
+            nuevaPosX = 468;
+        } else if (nuevaPosX + jugador.getDiametro() > 498) {
+           
+            nuevaPosX = 8;
+        }
+
         if (esPosicionValida(nuevaPosX, nuevaPosY)) {
-        	// System.out.println("Posición del jugador después de mover: (" + jugador.getX() + ", " + jugador.getY() + ")");
-            jugador.mover(deltaX, deltaY);
-            tablero.repaint();  // 
-            verificarColisiones(); // Después de mover al player, verifico la colision
+            System.out.println("Posición del jugador después de mover: (" + nuevaPosX + ", " + nuevaPosY + ")");
+            jugador.mover(nuevaPosX - jugador.getX(), deltaY); // Adjust the movement based on the new X position
+            tablero.repaint();
+            verificarColisiones();
         }
     }
+
 
     
     private void verificarColisiones() {
@@ -521,12 +786,25 @@ public class Tablero extends JFrame implements KeyListener {
             Rectangle fantasmaRect = new Rectangle(fantasma.getX(), fantasma.getY(), fantasma.getDiametro(), fantasma.getDiametro());
             if (jugadorRect.intersects(fantasmaRect)) {
                 // Colisión detectada
-            	
                 mostrarDialogoColision();
-                return;  // Salgo del bucle después de la primera colisiópn encontrada
+                return;  // Salgo del bucle después de la primera colisión encontrada
+            }
+        }
+
+        // Verifica colisiones con etiquetas
+        Component[] componentes = tablero.getComponents();
+        for (Component componente : componentes) {
+            if (componente instanceof JLabel) {
+                JLabel label = (JLabel) componente;
+                Rectangle labelRect = label.getBounds();
+                if (jugadorRect.intersects(labelRect)) {
+                    // Colisión con un JLabel, oculta la etiqueta
+                    label.setVisible(false);
+                }
             }
         }
     }
+
     
     private void restarVida() {
         vidas--;
