@@ -100,13 +100,14 @@ public class Tablero extends JFrame implements KeyListener {
 	 * @param name 
 	 */
 	public Tablero(String name) {
+		setUndecorated(true);
 		this.name = name;
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Tablero.class.getResource("/imagenes/pacman32.png")));
 		setResizable(false);
 		setTitle("Pacman");
 
 		 setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	        setBounds(100, 100, 900, 630);
+	        setBounds(100, 100, 883, 590);
 	        contentPane = new JPanel();
 	        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 	        setContentPane(contentPane);
@@ -140,14 +141,33 @@ public class Tablero extends JFrame implements KeyListener {
 					reproduciendo = false;
 					btn_music.setIcon(new ImageIcon(PantallaPrincipal.class.getResource("/imagenes/botonMusicOff.png")));
 				}
+		        tablero.requestFocusInWindow();
+			}
+			
+			
+		});
+		
+		JButton btnNewButton = new JButton("");
+		btnNewButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				terminarJuego();
+				
 			}
 		});
+		btnNewButton.setBounds(55, 444, 90, 40);
+		marcador.add(btnNewButton);
+		btnNewButton.setContentAreaFilled(false);
+		btnNewButton.setBorderPainted(false);
+		btnNewButton.setOpaque(false);
+		btnNewButton.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/exit.png")));
 		btn_music.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/botonMusicOn.png")));
 		btn_music.setOpaque(false);
 		btn_music.setContentAreaFilled(false);
 		btn_music.setBorderPainted(false);
 		btn_music.setBorder(null);
-		btn_music.setBounds(84, 448, 32, 32);
+		btn_music.setBounds(126, 67, 32, 32);
 		marcador.add(btn_music);
 		
 		lb_puntos = new JLabel("");
@@ -236,7 +256,7 @@ public class Tablero extends JFrame implements KeyListener {
 		
 		JLabel lblNewLabel_1 = new JLabel("");
 		lblNewLabel_1.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/clock.gif")));
-		lblNewLabel_1.setBounds(74, 57, 42, 42);
+		lblNewLabel_1.setBounds(41, 60, 42, 42);
 		marcador.add(lblNewLabel_1);
 		
 		JLabel lblNewLabel_3 = new JLabel("\r\n");
@@ -558,18 +578,22 @@ public class Tablero extends JFrame implements KeyListener {
 	        
 	        //Usamos un hilo para mover al jugador y actualizar su posicion en el tablero con el método repaint
 	        hiloMovimientoPacman = new Thread(() -> {
-	            while (true) {
+	            while (!Thread.currentThread().isInterrupted()) {
 	                moverJugador(direccionX, direccionY);
 	                tablero.repaint();
 
 	                try {
-	                    Thread.sleep(100); //Cin esto puedo ajustar la velocidad del pacman
+	                    Thread.sleep(100); // Con esto puedes ajustar la velocidad del pacman
 	                } catch (InterruptedException e) {
-	                    e.printStackTrace();
+	                    // Lanzar una nueva InterruptedException cuando se produce una interrupción
+	                    Thread.currentThread().interrupt();
+	                    throw new RuntimeException("Hilo interrumpido", e);
 	                }
 	            }
 	        });
-	        hiloMovimientoPacman.start(); //El hilo comienza a moverse
+
+	        hiloMovimientoPacman.start(); // El hilo comienza a moverse
+
 	        
 	        
 	       //Inicializo los fantasmas como hiulos, llamando al método mover 
@@ -950,6 +974,7 @@ public class Tablero extends JFrame implements KeyListener {
 	        tablero.add(lblNewLabel_14_17);
 	        
 	        JLabel lblNewLabel_5 = new JLabel("");
+	        lblNewLabel_5.setBorder(new LineBorder(new Color(0, 255, 255), 2));
 	        lblNewLabel_5.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/trasparencia2.png")));
 	        lblNewLabel_5.setBounds(0, 0, 884, 591);
 	        panel.add(lblNewLabel_5);
@@ -961,8 +986,9 @@ public class Tablero extends JFrame implements KeyListener {
 	        
 			addWindowListener(new WindowAdapter() {
 				@Override
-				public void windowClosed(WindowEvent e) {
+				public void windowClosing(WindowEvent e) {
 					 temporizador.stop();
+				     
 				}
 				@Override
 				public void windowActivated(WindowEvent e) {
@@ -975,7 +1001,7 @@ public class Tablero extends JFrame implements KeyListener {
 			            sound.open(audioStream);
 			            sound.start();
 			            
-			            musicaStart();
+			           musicaStart();
 			            
 				}catch(Exception ex) {
 					System.out.print("Error en el sonido inicial");
@@ -988,7 +1014,6 @@ public class Tablero extends JFrame implements KeyListener {
 	}
 	
 	
-
 	private void temporizador() {
 		temporizador = new Timer(1000, e -> {
 		    if (!pausaTemporal) {
@@ -1003,9 +1028,9 @@ public class Tablero extends JFrame implements KeyListener {
 		        // mria si el tiempo ha llegado a cero
 		        if (tiempoRestante <= 0) {
 		        	musicaStop();
-		            ((Timer) e.getSource()).stop();
-		            terminarJuego();
+		            ((Timer) e.getSource()).stop();	           
 		            colisionDetectada.set(false);
+		            terminarJuego();
 		        }
 		    }
 		});
@@ -1126,8 +1151,8 @@ public class Tablero extends JFrame implements KeyListener {
                 lbl_vida2.setVisible(false);
                 break;
             case 0:
-                lbl_vida1.setVisible(false);
-                terminarJuego();
+                lbl_vida1.setVisible(false);    
+                
                 break;
         }
     }
@@ -1140,10 +1165,14 @@ public class Tablero extends JFrame implements KeyListener {
             try {
             	sonidoMuerte();
                 semaforoColision.acquire(); // cojo el semáforo para evitar colisiones concurrentes (wtf)
-                JOptionPane.showMessageDialog(this, "Ñam,ñam, qué rico... Tienes una vida menos");
                 restarVida(); //restamos vida
                 // Reinicia las posiciones del jugador y los fantasmas
+                if(vidas >0) {
                 reiniciarJuego();
+                }else {
+                	musicaStop();
+                	terminarJuego();
+                }
                 colisionDetectada.set(false);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -1228,9 +1257,11 @@ public class Tablero extends JFrame implements KeyListener {
 
 
     private void terminarJuego() {
-      
+        musicaStop();
         temporizador.stop();
-        
+    	 dispose();
+
+
 
         //Me cargo los hilos y next
         hiloMovimientoPacman.interrupt();
@@ -1239,12 +1270,8 @@ public class Tablero extends JFrame implements KeyListener {
         hiloFantasmaRojo.interrupt();
         hiloFantasmaRosa.interrupt();
         
-   
-       //INTENTAR FINALIZAR HILO DE JUGADOR, QUE NO LO CONSIGO
-
-        JOptionPane.showMessageDialog(this, "GAME OVER");
-        dispose();
-        PantallaFinal finJuego = new PantallaFinal(getName());
+       
+        PantallaFinal finJuego = new PantallaFinal(getName(), getPuntos());
         finJuego.setVisible(true);
     }
     
@@ -1283,15 +1310,12 @@ public class Tablero extends JFrame implements KeyListener {
         }
     }
     
-    private void musicaStop() {
+    public void musicaStop() {
         try {
-            // Ruta del archivo de audio (cambia esto a la ubicación de tu archivo de música)
-            File audioFile = new File("tema.wav");
-
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
-            tema = AudioSystem.getClip();
-            tema.open(audioStream);
-            tema.stop();
+            // Si el Clip ya está abierto, lo detenemos
+            if (tema != null && tema.isOpen()) {
+                tema.stop();
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -1321,7 +1345,13 @@ public class Tablero extends JFrame implements KeyListener {
         }
     }
 
-    @Override
+    public int getPuntos() {
+		return puntos;
+	}
+	public void setPuntos(int puntos) {
+		this.puntos = puntos;
+	}
+	@Override
     public void keyTyped(KeyEvent e) {
     }
 

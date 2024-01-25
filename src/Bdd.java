@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Bdd {
 	private static final String CONTROLADOR = "com.mysql.jdbc.Driver";
-	private static final String URL = "jdbc:mysql://bxwm1kxr5svmeuproay4-mysql.services.clever-cloud.com:3306/bxwm1kxr5svmeuproay4";
+	private static final String URL = "jdbc:mysql://bxwm1kxr5svmeuproay4-mysql.services.clever-cloud.com:3306/bxwm1kxr5svmeuproay4?useSSL=false";
 	private static final String USUARIO = "uk6bvuigo3ihabpa";
 	private static final String CLAVE = "gkKxwznW6jIqe4yG2ngq";
 
@@ -53,32 +53,66 @@ public class Bdd {
 	        }
 	    }
 	
-	   public List<Registro> sacarPuntos() {
-	        List<Registro> listaRegistros = new ArrayList<>();
 
+	   
+	   public boolean sacarPuntos(Score score, int posicion) {
+		    try (Connection conexion = conectar()) {
+		        String sql = "SELECT nickname, puntos FROM registro ORDER BY puntos DESC LIMIT ?, 7";
+
+		        try (PreparedStatement pstmt = conexion.prepareStatement(sql)) {
+		            pstmt.setInt(1, Math.max(0, posicion * 7));  // Asegurarse de que no sea menos de 0
+
+		            try (ResultSet rs = pstmt.executeQuery()) {
+		                List<String> nicknames = new ArrayList<>();
+		                List<Integer> puntos = new ArrayList<>();
+
+		                int contador = 0;
+
+		                while (rs.next() && contador < 7) {
+		                    String nickname = rs.getString("nickname");
+		                    int puntuacion = rs.getInt("puntos");
+
+		                    nicknames.add(nickname);
+		                    puntos.add(puntuacion);
+
+		                    contador++;
+		                }
+
+		                // Actualizar la interfaz de usuario con los datos obtenidos
+		                score.actualizarInterfazUsuario(nicknames, puntos, contador);
+
+		                // Devolver true si hay más elementos disponibles para avanzar
+		                return contador == 7;
+
+		            }
+		        }
+		    } catch (SQLException e) {
+		        System.out.println("Error al obtener puntos");
+		        e.printStackTrace();
+		        // Devolver false en caso de error
+		        return false;
+		    }
+		}
+
+	    
+	    public int obtenerTotalRegistros() {
 	        try (Connection conexion = conectar()) {
-	            String sql = "SELECT * FROM registro";
+	            String sql = "SELECT COUNT(*) AS total FROM registro";
 
-	            try (PreparedStatement pstmt = conexion.prepareStatement(sql)) {
+	            try (PreparedStatement pstmt = conexion.prepareStatement(sql);
+	                 ResultSet rs = pstmt.executeQuery()) {
 
-	                // Ejecutar la consulta SELECT
-	                try (ResultSet resultSet = pstmt.executeQuery()) {
-	                    while (resultSet.next()) {
-	                        // Aquí puedes procesar los resultados
-	                        String resultadoNickname = resultSet.getString("nickname");
-	                        int resultadoPuntos = resultSet.getInt("puntos");
-
-	                        // Crear un objeto Registro y agregarlo a la lista
-	                        Registro registro = new Registro(resultadoNickname, resultadoPuntos);
-	                        listaRegistros.add(registro);
-	                    }
+	                if (rs.next()) {
+	                    return rs.getInt("total");
 	                }
+
 	            }
 	        } catch (SQLException e) {
-	            System.out.println("Error al ejecutar la consulta");
+	            System.out.println("Error al obtener el total de registros");
 	            e.printStackTrace();
 	        }
-	        return listaRegistros;
+
+	        return 0;
 	    }
-	
+
 }
