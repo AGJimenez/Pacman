@@ -16,12 +16,17 @@ import java.awt.Component;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 import javax.swing.JSeparator;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+
 import javax.swing.JProgressBar;
 import java.awt.Font;
 import javax.swing.SwingConstants;
@@ -45,6 +50,7 @@ public class Tablero extends JFrame implements KeyListener {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JPanel tablero;
+	private int totalLabels;
 	private Personaje jugador; //creo el pacman
 	private Personaje fantasmaRojo, fantasmaNaranja, fantasmaAzul, fantasmaRosa; //declaro los fantasmicos
 	private Rectangle[] limitesPaneles; //creamos un array de la librería graphics para recorrer los obstáculos en el mapa
@@ -57,7 +63,7 @@ public class Tablero extends JFrame implements KeyListener {
 	private int direccionY;
 	private Semaphore semaforoColision; //Con esto manejo colisiones entre fantasma y jugador
 	private AtomicBoolean colisionDetectada = new AtomicBoolean(false); //Tengo que usar "Atomic", que no lo he visto en mi vida, para que no pete
-	private  int tiempo_inicial = 120; // segundos
+	private  int tiempo_inicial = 135; // segundos
 	private int tiempoRestante;
 	private JProgressBar progressBar;
 	private JLabel lbl_temporizador;
@@ -67,7 +73,9 @@ public class Tablero extends JFrame implements KeyListener {
 	private Thread hiloFantasmaRosa;
 	private Thread hiloMovimientoPacman;
 	private boolean pausaTemporal = false;
-
+	private Clip sound;
+	private Clip dead;
+	private Clip tema;
 	/**
 	 * Launch the application.
 	 */
@@ -204,12 +212,6 @@ public class Tablero extends JFrame implements KeyListener {
 		lblNewLabel_3.setBounds(0, 0, 202, 498);
 		marcador.add(lblNewLabel_3);
 		
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosed(WindowEvent e) {
-				 temporizador.stop();
-			}
-		});
 		
 		  tablero = new JPanel() {
 	            @Override
@@ -813,6 +815,108 @@ public class Tablero extends JFrame implements KeyListener {
 	        lblNewLabel_081.setBounds(10, 230, 12, 12);
 	        tablero.add(lblNewLabel_081);
 	        
+	        JLabel lblNewLabel_14_1 = new JLabel("");
+	        lblNewLabel_14_1.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_14_1.setOpaque(true);
+	        lblNewLabel_14_1.setBounds(108, 276, 12, 12);
+	        tablero.add(lblNewLabel_14_1);
+	        
+	        JLabel lblNewLabel_14_2 = new JLabel("");
+	        lblNewLabel_14_2.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_14_2.setOpaque(true);
+	        lblNewLabel_14_2.setBounds(229, 372, 12, 12);
+	        tablero.add(lblNewLabel_14_2);
+	        
+	        JLabel lblNewLabel_14_3 = new JLabel("");
+	        lblNewLabel_14_3.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_14_3.setOpaque(true);
+	        lblNewLabel_14_3.setBounds(241, 186, 12, 12);
+	        tablero.add(lblNewLabel_14_3);
+	        
+	        JLabel lblNewLabel_14_4 = new JLabel("");
+	        lblNewLabel_14_4.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_14_4.setOpaque(true);
+	        lblNewLabel_14_4.setBounds(375, 129, 12, 12);
+	        tablero.add(lblNewLabel_14_4);
+	        
+	        JLabel lblNewLabel_14_5 = new JLabel("");
+	        lblNewLabel_14_5.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_14_5.setOpaque(true);
+	        lblNewLabel_14_5.setBounds(373, 21, 12, 12);
+	        tablero.add(lblNewLabel_14_5);
+	        
+	        JLabel lblNewLabel_14_6 = new JLabel("");
+	        lblNewLabel_14_6.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_14_6.setOpaque(true);
+	        lblNewLabel_14_6.setBounds(161, 21, 12, 12);
+	        tablero.add(lblNewLabel_14_6);
+	        
+	        JLabel lblNewLabel_14_7 = new JLabel("");
+	        lblNewLabel_14_7.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_14_7.setOpaque(true);
+	        lblNewLabel_14_7.setBounds(203, 82, 12, 12);
+	        tablero.add(lblNewLabel_14_7);
+	        
+	        JLabel lblNewLabel_14_8 = new JLabel("");
+	        lblNewLabel_14_8.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_14_8.setOpaque(true);
+	        lblNewLabel_14_8.setBounds(20, 85, 12, 12);
+	        tablero.add(lblNewLabel_14_8);
+	        
+	        JLabel lblNewLabel_14_9 = new JLabel("");
+	        lblNewLabel_14_9.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_14_9.setOpaque(true);
+	        lblNewLabel_14_9.setBounds(108, 165, 12, 12);
+	        tablero.add(lblNewLabel_14_9);
+	        
+	        JLabel lblNewLabel_14_10 = new JLabel("");
+	        lblNewLabel_14_10.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_14_10.setOpaque(true);
+	        lblNewLabel_14_10.setBounds(215, 132, 12, 12);
+	        tablero.add(lblNewLabel_14_10);
+	        
+	        JLabel lblNewLabel_14_11 = new JLabel("");
+	        lblNewLabel_14_11.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_14_11.setOpaque(true);
+	        lblNewLabel_14_11.setBounds(271, 132, 12, 12);
+	        tablero.add(lblNewLabel_14_11);
+	        
+	        JLabel lblNewLabel_14_12 = new JLabel("");
+	        lblNewLabel_14_12.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_14_12.setOpaque(true);
+	        lblNewLabel_14_12.setBounds(326, 324, 12, 12);
+	        tablero.add(lblNewLabel_14_12);
+	        
+	        JLabel lblNewLabel_14_13 = new JLabel("");
+	        lblNewLabel_14_13.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_14_13.setOpaque(true);
+	        lblNewLabel_14_13.setBounds(427, 395, 12, 12);
+	        tablero.add(lblNewLabel_14_13);
+	        
+	        JLabel lblNewLabel_14_14 = new JLabel("");
+	        lblNewLabel_14_14.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_14_14.setOpaque(true);
+	        lblNewLabel_14_14.setBounds(81, 465, 12, 12);
+	        tablero.add(lblNewLabel_14_14);
+	        
+	        JLabel lblNewLabel_14_15 = new JLabel("");
+	        lblNewLabel_14_15.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_14_15.setOpaque(true);
+	        lblNewLabel_14_15.setBounds(271, 422, 12, 12);
+	        tablero.add(lblNewLabel_14_15);
+	        
+	        JLabel lblNewLabel_14_16 = new JLabel("");
+	        lblNewLabel_14_16.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_14_16.setOpaque(true);
+	        lblNewLabel_14_16.setBounds(215, 422, 12, 12);
+	        tablero.add(lblNewLabel_14_16);
+	        
+	        JLabel lblNewLabel_14_17 = new JLabel("");
+	        lblNewLabel_14_17.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/naranja.jpg")));
+	        lblNewLabel_14_17.setOpaque(true);
+	        lblNewLabel_14_17.setBounds(326, 276, 12, 12);
+	        tablero.add(lblNewLabel_14_17);
+	        
 	        JLabel lblNewLabel_5 = new JLabel("");
 	        lblNewLabel_5.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/trasparencia2.png")));
 	        lblNewLabel_5.setBounds(0, 0, 884, 591);
@@ -823,7 +927,29 @@ public class Tablero extends JFrame implements KeyListener {
 	        lblNewLabel_4.setBounds(0, 0, 884, 619);
 	        panel.add(lblNewLabel_4);
 	        
-
+			addWindowListener(new WindowAdapter() {
+				@Override
+				public void windowClosed(WindowEvent e) {
+					 temporizador.stop();
+				}
+				@Override
+				public void windowActivated(WindowEvent e) {
+						inicializarTotalLabels();
+					  	File audioFile = new File("sonidoInicio.wav");
+					  	try {
+			            AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
+			            sound = AudioSystem.getClip();
+			            sound.open(audioStream);
+			            sound.start();
+			            
+			            musicaStart();
+			            
+				}catch(Exception ex) {
+					System.out.print("Error en el sonido inicial");
+				}	
+				}
+				});
+			
 	        tablero.requestFocusInWindow();
 	    
 	}
@@ -833,7 +959,7 @@ public class Tablero extends JFrame implements KeyListener {
 		temporizador = new Timer(1000, e -> {
 		    if (!pausaTemporal) {
 		        tiempoRestante--;
-
+		        
 		        // Actualiza la barra de progreso con el tiempo restante
 		        progressBar.setValue(tiempoRestante);
 
@@ -842,7 +968,7 @@ public class Tablero extends JFrame implements KeyListener {
 
 		        // mria si el tiempo ha llegado a cero
 		        if (tiempoRestante <= 0) {
-		            
+		        	musicaStop();
 		            ((Timer) e.getSource()).stop();
 		            terminarJuego();
 		            colisionDetectada.set(false);
@@ -894,8 +1020,19 @@ public class Tablero extends JFrame implements KeyListener {
         }
     }
 
+    
 
     private Set<JLabel> labelsConsumidos = new HashSet<>();
+    
+    private void inicializarTotalLabels() {
+        Component[] componentes = tablero.getComponents();
+        for (Component componente : componentes) {
+            if (componente instanceof JLabel) {
+                totalLabels++;
+            }
+        }
+    }
+    
     private void verificarColisiones() {
         Rectangle jugadorRect = new Rectangle(jugador.getX(), jugador.getY(), jugador.getDiametro(), jugador.getDiametro());
 
@@ -923,13 +1060,27 @@ public class Tablero extends JFrame implements KeyListener {
                         labelsConsumidos.add(label);
                         puntos = puntos + 10;
                         lb_puntos.setText(Integer.toString(puntos));
+
+                        // Verifica si todas las etiquetas han sido consumidas
+                        if (labelsConsumidos.size() == totalLabels) {
+                            // Todas las etiquetas han sido consumidas, gana la partida
+                            ganarPartida();
+                        }
                     }
                 }
             }
         }
     }
     
-    private void restarVida() {
+    private void ganarPartida() {
+		
+    	 JOptionPane.showMessageDialog(this, "Has ganado!!!");
+         dispose();
+         PantallaFinal finJuego = new PantallaFinal();
+         finJuego.setVisible(true);
+    	
+	}
+	private void restarVida() {
         vidas--;
 
         // Actualizaaz la representacióin de los iconitos
@@ -953,6 +1104,7 @@ public class Tablero extends JFrame implements KeyListener {
         	pausaTemporal = true;
             // Muestra un joption para la colision
             try {
+            	sonidoMuerte();
                 semaforoColision.acquire(); // cojo el semáforo para evitar colisiones concurrentes (wtf)
                 JOptionPane.showMessageDialog(this, "Ñam,ñam, qué rico... Tienes una vida menos");
                 restarVida(); //restamos vida
@@ -1060,6 +1212,49 @@ public class Tablero extends JFrame implements KeyListener {
         dispose();
         PantallaFinal finJuego = new PantallaFinal();
         finJuego.setVisible(true);
+    }
+    
+    
+    private void sonidoMuerte() {
+        try {
+            // Ruta del archivo de audio (cambia esto a la ubicación de tu archivo de música)
+            File audioFile = new File("muerte.wav");
+
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
+            dead = AudioSystem.getClip();
+            dead.open(audioStream);
+            dead.start();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    private void musicaStart() {
+        try {
+            // Ruta del archivo de audio (cambia esto a la ubicación de tu archivo de música)
+            File audioFile = new File("tema.wav");
+
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
+            tema = AudioSystem.getClip();
+            tema.open(audioStream);
+            tema.start();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    private void musicaStop() {
+        try {
+            // Ruta del archivo de audio (cambia esto a la ubicación de tu archivo de música)
+            File audioFile = new File("tema.wav");
+
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
+            tema = AudioSystem.getClip();
+            tema.open(audioStream);
+            tema.stop();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
     
     @Override
