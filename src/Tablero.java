@@ -1135,10 +1135,10 @@ public class Tablero extends JFrame implements KeyListener {
 		
     	 JOptionPane.showMessageDialog(this, "Has ganado!!!");
     	 musicaStop();
-         dispose();
-         Score finJuego = new Score();
+    	 PantallaFinalWin finJuego = new PantallaFinalWin(getName(), getPuntos());
          finJuego.setVisible(true);
-    	
+         dispose();
+	
 	}
 	private void restarVida() {
         vidas--;
