@@ -21,6 +21,7 @@ public class Nombre extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private JTextField textField;
+	private String name;
 	private PantallaPrincipal pantallaPrincipal;
 	/**
 	 * Launch the application.
@@ -68,11 +69,12 @@ public class Nombre extends JDialog {
         btnNewButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnNewButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	name = textField.getText();
                 dispose();
                 if (pantallaPrincipal != null) {
                     pantallaPrincipal.dispose();
                 }
-                Tablero juego = new Tablero();
+                Tablero juego = new Tablero(name);
                 juego.setVisible(true);
             }
         });
@@ -114,4 +116,14 @@ public class Nombre extends JDialog {
             pantallaPrincipal.dispose();
         }
     }
+
+	public JTextField getTextField() {
+		return textField;
+	}
+
+	public void setTextField(JTextField textField) {
+		this.textField = textField;
+	}
+    
+    
 }

@@ -32,6 +32,10 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import java.awt.Toolkit;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.Cursor;
 
 
 /* 
@@ -76,13 +80,15 @@ public class Tablero extends JFrame implements KeyListener {
 	private Clip sound;
 	private Clip dead;
 	private Clip tema;
+	private String name;
+	private boolean reproduciendo = true;
 	/**
 	 * Launch the application.
 	 */
 	    public static void main(String[] args) {
 	        EventQueue.invokeLater(() -> {
 	            try {
-	            	Tablero frame = new Tablero();
+	            	Tablero frame = new Tablero(null);
 	                frame.setVisible(true);
 	            } catch (Exception e) {
 	                e.printStackTrace();
@@ -91,8 +97,10 @@ public class Tablero extends JFrame implements KeyListener {
 	    }
 	/**
 	 * Create the frame.
+	 * @param name 
 	 */
-	public Tablero() {
+	public Tablero(String name) {
+		this.name = name;
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Tablero.class.getResource("/imagenes/pacman32.png")));
 		setResizable(false);
 		setTitle("Pacman");
@@ -117,6 +125,30 @@ public class Tablero extends JFrame implements KeyListener {
 		marcador.setBounds(621, 48, 202, 498);
 		panel.add(marcador);
 		marcador.setLayout(null);
+		
+		JButton btn_music = new JButton("");
+		btn_music.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btn_music.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if(reproduciendo == false) {
+					musicaStart();
+					reproduciendo = true;
+					btn_music.setIcon(new ImageIcon(PantallaPrincipal.class.getResource("/imagenes/botonMusicOn.png")));
+				}else {
+					musicaStop();
+					reproduciendo = false;
+					btn_music.setIcon(new ImageIcon(PantallaPrincipal.class.getResource("/imagenes/botonMusicOff.png")));
+				}
+			}
+		});
+		btn_music.setIcon(new ImageIcon(Tablero.class.getResource("/imagenes/botonMusicOn.png")));
+		btn_music.setOpaque(false);
+		btn_music.setContentAreaFilled(false);
+		btn_music.setBorderPainted(false);
+		btn_music.setBorder(null);
+		btn_music.setBounds(84, 448, 32, 32);
+		marcador.add(btn_music);
 		
 		lb_puntos = new JLabel("");
 		lb_puntos.setFont(new Font("I pixel u", Font.PLAIN, 22));
@@ -934,6 +966,7 @@ public class Tablero extends JFrame implements KeyListener {
 				}
 				@Override
 				public void windowActivated(WindowEvent e) {
+						System.out.println(name);
 						inicializarTotalLabels();
 					  	File audioFile = new File("sonidoInicio.wav");
 					  	try {
@@ -955,6 +988,7 @@ public class Tablero extends JFrame implements KeyListener {
 	}
 	
 	
+
 	private void temporizador() {
 		temporizador = new Timer(1000, e -> {
 		    if (!pausaTemporal) {
@@ -1013,7 +1047,7 @@ public class Tablero extends JFrame implements KeyListener {
         }
 
         if (esPosicionValida(nuevaPosX, nuevaPosY)) {
-            System.out.println("Posición del jugador después de mover: (" + nuevaPosX + ", " + nuevaPosY + ")");
+        //    System.out.println("Posición del jugador después de mover: (" + nuevaPosX + ", " + nuevaPosY + ")");
             jugador.mover(nuevaPosX - jugador.getX(), deltaY); // Adjust the movement based on the new X position
             tablero.repaint();
             verificarColisiones();
@@ -1076,7 +1110,7 @@ public class Tablero extends JFrame implements KeyListener {
 		
     	 JOptionPane.showMessageDialog(this, "Has ganado!!!");
          dispose();
-         PantallaFinal finJuego = new PantallaFinal();
+         Score finJuego = new Score();
          finJuego.setVisible(true);
     	
 	}
@@ -1195,7 +1229,7 @@ public class Tablero extends JFrame implements KeyListener {
 
     private void terminarJuego() {
       
-            temporizador.stop();
+        temporizador.stop();
         
 
         //Me cargo los hilos y next
@@ -1210,11 +1244,17 @@ public class Tablero extends JFrame implements KeyListener {
 
         JOptionPane.showMessageDialog(this, "GAME OVER");
         dispose();
-        PantallaFinal finJuego = new PantallaFinal();
+        PantallaFinal finJuego = new PantallaFinal(getName());
         finJuego.setVisible(true);
     }
     
-    
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	
     private void sonidoMuerte() {
         try {
             // Ruta del archivo de audio (cambia esto a la ubicación de tu archivo de música)

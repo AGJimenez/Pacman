@@ -132,6 +132,12 @@ public class PantallaPrincipal extends JFrame {
 		contentPane.add(btnNewButton_1_1);
 		
 		JButton btnNewButton_1 = new JButton("");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Score score = new Score();
+				score.setVisible(true);
+			}
+		});
 		btnNewButton_1.setSelectedIcon(new ImageIcon(PantallaPrincipal.class.getResource("/imagenes/leaderboardw.png")));
 		btnNewButton_1.setRolloverIcon(new ImageIcon(PantallaPrincipal.class.getResource("/imagenes/leaderboardc.png")));
 		btnNewButton_1.setIcon(new ImageIcon(PantallaPrincipal.class.getResource("/imagenes/leaderboardw.png")));

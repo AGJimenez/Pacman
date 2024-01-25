@@ -5,18 +5,21 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class PantallaFinal extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
-
+	private Nombre nombre;
+	private String name;
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			PantallaFinal dialog = new PantallaFinal();
+			PantallaFinal dialog = new PantallaFinal(null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -26,8 +29,11 @@ public class PantallaFinal extends JDialog {
 
 	/**
 	 * Create the dialog.
+	 * @param name 
 	 */
-	public PantallaFinal() {
+	public PantallaFinal(String name) {
+		this.name = name;
+		System.out.println("PANTALLA FINAL: "+name);
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setLayout(new FlowLayout());
@@ -39,6 +45,15 @@ public class PantallaFinal extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton okButton = new JButton("OK");
+				okButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						
+						Bdd bdd = new Bdd();
+						bdd.insertarPuntos(name, 10000);
+						
+						
+					}
+				});
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
