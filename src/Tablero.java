@@ -583,9 +583,9 @@ public class Tablero extends JFrame implements KeyListener {
 	                tablero.repaint();
 
 	                try {
-	                    Thread.sleep(100); // Con esto puedes ajustar la velocidad del pacman
+	                    Thread.sleep(100); // Con esto ajusto la velocidad de pacman
 	                } catch (InterruptedException e) {
-	                    // Lanzar una nueva InterruptedException cuando se produce una interrupción
+	                    // Interrupción del hilo
 	                    Thread.currentThread().interrupt();
 	                    throw new RuntimeException("Hilo interrumpido", e);
 	                }
@@ -991,12 +991,12 @@ public class Tablero extends JFrame implements KeyListener {
 				     
 				}
 				@Override
-				public void windowActivated(WindowEvent e) {
+				public void windowActivated(WindowEvent e) {//cuando la ventana se activa
 						System.out.println(name);
 						inicializarTotalLabels();
 					  	File audioFile = new File("sonidoInicio.wav");
 					  	try {
-			            AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
+			            AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile); 
 			            sound = AudioSystem.getClip();
 			            sound.open(audioStream);
 			            sound.start();
@@ -1073,7 +1073,7 @@ public class Tablero extends JFrame implements KeyListener {
 
         if (esPosicionValida(nuevaPosX, nuevaPosY)) {
         //    System.out.println("Posición del jugador después de mover: (" + nuevaPosX + ", " + nuevaPosY + ")");
-            jugador.mover(nuevaPosX - jugador.getX(), deltaY); // Adjust the movement based on the new X position
+            jugador.mover(nuevaPosX - jugador.getX(), deltaY); 
             tablero.repaint();
             verificarColisiones();
         }
@@ -1254,7 +1254,7 @@ public class Tablero extends JFrame implements KeyListener {
                 break;
             }
         }
-    } //MENCION HONORIFICA A CHATTY POR HACERME LOS RANDOM, SÍ, NO SÉ DE MATEMÁTICAS.
+    } //MENCION HONORIFICA A CHATTY POR HACERME LAS MATES
 
 
     private void terminarJuego() {
@@ -1285,7 +1285,7 @@ public class Tablero extends JFrame implements KeyListener {
 	
     private void sonidoMuerte() {
         try {
-            // Ruta del archivo de audio (cambia esto a la ubicación de tu archivo de música)
+            // Ruta del archivo de audio
             File audioFile = new File("muerte.wav");
 
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
@@ -1299,7 +1299,7 @@ public class Tablero extends JFrame implements KeyListener {
     
     private void musicaStart() {
         try {
-            // Ruta del archivo de audio (cambia esto a la ubicación de tu archivo de música)
+            // Ruta del archivo de audio
             File audioFile = new File("tema.wav");
 
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
